@@ -1,4 +1,4 @@
-read-in-csvs: \
+<b> read-in-csvs: </b>\
 -Each file acts as a dictionary to define appropriate data ranges, provide coordinates for sites, and classify certain variables according to crop/site.\
 sample-data:\
 -Manually downloaded what is fed into the Dashboard. The plan is to have the data and dashboard update daily.\
