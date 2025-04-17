@@ -16,22 +16,19 @@ from matplotlib.backends.backend_pdf import PdfPages
 import plotly.graph_objects as go
 from dash import Dash, html, dcc, callback, Output, Input, dash_table, State
 import plotly.express as px
-from google.cloud import storage
 from statistics import mean
-from io import StringIO
 
 
 
-trex_all = google_pull("trex_data.csv")
+trex_all = pd.read_csv("/home/audreypet/crop-dashboard/sample-data/trex_data.csv")
 time_format = "%Y-%m-%d %H:%M:%S"
 trex_all["TIMESTAMP"] = [datetime.strptime(time, time_format) for time in trex_all["TIMESTAMP"]]
 
-matt_all = google_pull("matt_data.csv")
+matt_all = pd.read_csv("/home/audreypet/crop-dashboard/sample-data/matt_data.csv")
 matt_all["TIMESTAMP"] = [datetime.strptime(time, time_format) for time in matt_all["TIMESTAMP"]]
 
-range_blob = bucket.blob("all_dl_ranges.csv")
-range_content = range_blob.download_as_text()
-rangedf = pd.read_csv(StringIO(range_content), header=[0],sep=',',na_values="NAN",engine='python')
+range_path = "/home/audreypet/crop-dashboard/read-in-csvs/all_dl_range.csv"
+rangedf = pd.read_csv(range_path, header=[0],sep=',',na_values="NAN",engine='python')
 
 test_calls = ['e_probe', 'e_sat_probe', 'H2O_probe', 'RH_3_1_1', 'T_DP_3_1_1', 'FW', 'H_FW', 'SW_IN', 'SW_OUT', 'LW_IN', 'LW_OUT', 'TA_3_1_1', 'T_CANOPY', 'G', 'CO2_sig_strgth_Min', 'H2O_sig_strgth_Min', 'CO2_density', 'H2O_density', 'LE', 'H', 'VPD', 'P_Tot', 'batt_volt']
 
@@ -43,14 +40,14 @@ olives = ["ART_011", "ORO_022", "ORO_043", "COR_CS3"]
 pistachios = ["BLS_001", "BLS_002"]
 grapes = ["FLT", "SLC"]
 # Read in parameters classified by equipment group
-almond_list = google_pull("Almond_Equipment.csv") ### NEED TO BE CHANGED
-grape_list = google_pull("Grape_Equipment.csv")
-olive_list = google_pull("Olive_Equipment.csv")
-pistachio_list = google_pull("Pistachio_Equipment.csv")
+almond_list = pd.read_csv("/home/audreypet/crop-dashboard/read-in-csvs/Almond_Equipment.csv")
+grape_list = pd.read_csv("/home/audreypet/crop-dashboard/read-in-csvs/Grape_Equipment.csv")
+olive_list = pd.read_csv("/home/audreypet/crop-dashboard/read-in-csvs/Olive_Equipment.csv")
+pistachio_list = pd.read_csv("/home/audreypet/crop-dashboard/read-in-csvs/Pistachio_Equipment.csv")
 
 # Read in coordinates for sites
-coords = google_pull("Site_Long_Lat.csv")
-area = google_pull("Site_Area_Coords.csv")
+coords = pd.read_csv("/home/audreypet/crop-dashboard/read-in-csvs/Site_Long_Lat.csv")
+area = pd.read_csv("/home/audreypet/crop-dashboard/read-in-csvs/Site_Area_Coords.csv")
 
 
 # Creates a dictionary that lists which parameters exist for each crop. Used to populate dropdowns based on crops later.
