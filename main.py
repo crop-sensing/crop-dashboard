@@ -123,7 +123,8 @@ dash_app.layout = [html.Div([
         
         html.Div([
             html.H1(["Crop Sensing Group Flux Dashboard"], 
-                style = {"display": "inline-block", "margin-left": "35%", "vertical-align": "50%", "text-align": "center"}),
+                style = {"display": "inline-block", "margin-left": "35%", "vertical-align": "50%"},
+                id = "title-text"),
             # html.Img(src=dash_app.get_asset_url('usda.png'), 
             #      style = {"width": 55, "display": "inline-block", "vertical-align": "10%", "margin-left": 10})
         ]),
@@ -135,7 +136,7 @@ dash_app.layout = [html.Div([
             html.Div([
                 html.Div([
                     html.Label(["Crops:"], style = {"text-align": "left", "font-weight": "bold", 
-                                                "padding-left": 75})
+                                                "padding-left": 75}, id = "crop-label")
                          ]),
                 html.Div([
                     dcc.RadioItems(options = [
@@ -186,7 +187,8 @@ dash_app.layout = [html.Div([
                     clearable = True,
                     maxHeight = 420,
                     style = {"margin-bottom": 10, "margin-top": 10, "margin-right": "15%"})
-            ], style = {"width": "35%", "display": "inline-block", "padding-left": 75}),
+            ], style = {"width": "35%", "display": "inline-block", "padding-left": 75},
+            id = "site-select-div"),
             html.Div([
                 html.Label(["Site 2 (For Parameter 2):"], id = "site-label-2",
                           style = {})
@@ -212,7 +214,7 @@ dash_app.layout = [html.Div([
 
                 html.Div([
                     html.Label(["Equipment Group:"], style = {"text-align": "left", "font-weight": "bold",
-                                                              "margin-top": 10})
+                                                              "margin-top": 10},)
             ], id = "equip-label", style = {"margin-top": 5}),
                 dcc.Dropdown(
 #                     options = ["Asperated Shield"],
@@ -223,8 +225,9 @@ dash_app.layout = [html.Div([
                     searchable = False,
                     maxHeight = 300)
                 ], 
-                style = {"width": "35%", "display": "inline-block",
-                        "padding-left": 75}),
+                style = {"width": "90%", "display": "inline-block",
+                        "padding-left": 75},
+                id = "equip-group-div"),
             
             # Dropdown for first parameter selection and label.
             
@@ -241,14 +244,15 @@ dash_app.layout = [html.Div([
                 html.Div([
                     dcc.Dropdown(
         #                     options = ["e_probe"],
-        #                     value = ["e_probe"],
+                            # value = ["batt_volt"],
                             id = "param-select",
                             style = {"margin-top": 10, "margin-right": "15%"},
                             clearable = False,
                             searchable = False,
                             maxHeight = 420)
                 ], style = {"display": "inline-block", "width": "35%",
-                            "padding-left": 75}),
+                            "padding-left": 75},
+                    id = "param-select-div"),
 
                 # Dropdown that customizes plot displayed based on used dropdown
                 
@@ -285,7 +289,8 @@ dash_app.layout = [html.Div([
                     clearable = False,
                     searchable = False,
                     maxHeight = 420)
-            ], style = {"width": "35%", "display": "inline-block", "padding-left": 75})
+            ], style = {"width": "35%", "display": "inline-block", "padding-left": 75},
+                id = "second-param-div")
 
             
             
@@ -301,6 +306,24 @@ dash_app.layout = [html.Div([
 #                  html.Div([""], style = {"display": "inline-block"}),
                  dcc.Graph(id = "norm-graph",
                  style = {"width": "57%", "display": "inline-flex", "margin-left": 35})]),
+        html.Div([
+                    html.Label(["Plot Type:"], id = "plot-type-label-mobile", 
+                           style = {"text-align": "center", "font-weight": "bold", 
+                                    "margin-left": "12.8%", 'display': "inline-block"}),
+                    dcc.Dropdown(
+                            options = [
+                                {'label': "Line Plot: Parameter vs. Time", 'value': "LP-PT"},
+                                {'label': "Line Plot: Two Parameters vs. Time", "value": "LP-2PT"},
+                                {'label': "Scatter Plot: Parameter vs. Time", "value": "SP-PT"},
+                                {'label': "Scatter Plot: Two Parameters vs. Time", "value": "SP-2PT"},
+                                {'label': "Scatter Plot: Parameter vs. Parameter", 'value': "SP-PP"}],
+                            value = "LP-PT",
+                            multi = False,
+                            clearable = False,
+                            searchable = False,
+                            id = 'plot-type-dropdown-mobile')
+                ], style = {},
+                   id = "right-dropdown-div-mobile"),
     
         # Creates storage for each non-site drop down to improve user experience.
     
@@ -310,15 +333,14 @@ dash_app.layout = [html.Div([
                   data = {"drop2": "option2"}),
         dcc.Store(id = "drop3-store",
                   data = {"drop3": "option3"})],
-        style = {"font-family": "Helvetica, sans-serif", "background-color": "white"})
+        style = {"font-family": "Helvetica, sans-serif"})
              ]
 
 
 
-# Initialize Flask
+# Fills equipment group dropdown based on radio selection. Alphabetizes equipment group names for continuity.
 @server.route("/")
 
-# Fills equipment group dropdown based on radio selection. Alphabetizes equipment group names for continuity.
 @callback(
     Output("equip-group", "options"),
     Input("crop-radio", "value"))
@@ -568,7 +590,7 @@ def add_second_dropdown(num_param):
     else:
         return {"margin-top": 5, "margin-right": "15%", "margin-bottom": 10}
     
-# Disables/Enables ability to select multiple sites depending on plot type.
+# Disables/Enabled ability to selected multiple sites depending on plot type.
 
 @callback(
     Output("site-selection", "multi"),
@@ -605,15 +627,30 @@ def second_site_drop_intialize(options):
 
 @callback(
     Output("second-site", "style"),
-    Input("plot-type-dropdown", "value"))
+    Output("second-site-div", "style"),
+    Input("plot-type-dropdown", "value"),
+    Input("window-check", "children"))
 
-def show_second_site(num_param):
-    if num_param in ['LP-PT', 'SP-PT']:
-        return {"display": "none"}
+def show_second_site(num_param, width):
+    if width > 1300:
+        if num_param in ['LP-PT', 'SP-PT']:
+            return [{"display": "none"},
+                    {"width": "29.75%", "display": "inline-block", "padding-left": 75,
+                                                "margin-top": 10}]
+        else:
+            return [{"margin-top": 5, "margin-right": "15%", "margin-bottom": 10},
+                    {"width": "29.75%", "display": "inline-block", "padding-left": 75,
+                                                "margin-top": 10}]
     else:
-        {"margin-top": 5, "margin-right": "15%", "margin-bottom": 10}
-        
-# Adjusts placement of elements based on plot type dropdown input and window size.
+        if num_param in ['LP-PT', 'SP-PT']:
+            return [{"display": "none"},
+                    {"width": "29.75%", "display": "inline-block", "padding-left": 12,
+                                                "margin-top": 10}]
+        else:
+            return [{"margin-top": 5, "margin-right": "15%", "margin-bottom": 10},
+                    {"width": "90%", "display": "inline-block", "padding-left": 12}]
+                    
+# Adjusts placement of elemtents based on plot type dropdown input.
         
 @callback(
     Output("equip-label", "style"),
@@ -624,41 +661,71 @@ def show_second_site(num_param):
     Input("window-check", "children"))
 
 def change_equip_label(plot_type, width):
-    rdiv = (width-16) * .57
-    block = ((width // 100) - 21) / 100
-    graph_size = rdiv * (.765 + block)
-    buffer = 35 + ((rdiv - graph_size)/2) - 75 + 10
+    if width > 1300:
+        rdiv = (width-16) * .57
+        block = ((width // 100) - 21) / 100
+        graph_size = rdiv * (.765 + block)
+        buffer = 35 + ((rdiv - graph_size)/2) - 75 + 10
 
-    p1_buff = ((width-16) * .35) - 83.633
+        p1_buff = ((width-16) * .35) - 83.633
 
-    if plot_type in ["LP-PT", "SP-PT"]:
-        return [{}, {"text-align": "center", "font-weight": "bold", 
-                                    "margin-left": buffer, 'display': "inline-block"},
-                {"text-align": "left", "font-weight": "bold", 
-                        "padding-left": 75, 'display': "inline-block",
-                        "padding-right": p1_buff},
-                {"display": "inline-block", "width": "35%", "padding-left": buffer}]
+        if plot_type in ["LP-PT", "SP-PT"]:
+            return [{},
+                    {"text-align": "center", "font-weight": "bold", 
+                                        "margin-left": buffer, 'display': "inline-block"},
+                    {"text-align": "left", "font-weight": "bold", 
+                            "padding-left": 75, 'display': "inline-block",
+                            "padding-right": p1_buff},
+                    {"display": "inline-block", "width": "35%", "padding-left": buffer}]
+        else:
+            return [{"margin-top": 10},
+                    {"text-align": "center", "font-weight": "bold", "margin-left": buffer-10, 'display': "inline-block"},
+                    {"text-align": "left", "font-weight": "bold", 
+                            "padding-left": 75, 'display': "inline-block",
+                            "padding-right": p1_buff},
+                    {"display": "inline-block", "width": "35%", "padding-left": buffer}]
     else:
-        return [{"margin-top": 10},
-                {"text-align": "center", "font-weight": "bold", "margin-left": buffer-10, 'display': "inline-block"},
-                {"text-align": "left", "font-weight": "bold", 
-                        "padding-left": 75, 'display': "inline-block",
-                        "padding-right": p1_buff},
-                {"display": "inline-block", "width": "35%", "padding-left": buffer}]
+        rdiv = (width-16) * .57
+        block = ((width // 100) - 21) / 100
+        graph_size = rdiv * (.765 + block)
+        buffer = 35 + ((rdiv - graph_size)/2) - 75 + 10
+
+        p1_buff = ((width-16) * .35) - 83.633
+
+        if plot_type in ["LP-PT", "SP-PT"]:
+            return [{},
+                    {"display": "none"},
+                    {"text-align": "left", "font-weight": "bold", 
+                            "padding-left": 12, 'display': "inline-block"},
+                    {"display": "inline-block", "width": "35%", "padding-left": buffer}]
+        else:
+            return [{"margin-top": 10},
+                    {"display": "none"},
+                    {"text-align": "left", "font-weight": "bold", 
+                            "padding-left": 12, 'display': "inline-block"},
+                    {"display": "inline-block", "width": "35%", "padding-left": buffer}]
 
 # Edits/hides/shows site dropdown based on plot type dropdown
     
 @callback(
     Output("site-label-1", "children"),
     Output("site-label-2", "style"),
-    Input("plot-type-dropdown", "value"))
+    Input("plot-type-dropdown", "value"),
+    Input("window-check", "children"))
 
-def site_text_update(plot_type):
-    if plot_type in ['LP-PT', 'SP-PT']:
-        return ["Sites:", {"display": "none"}]
+def site_text_update(plot_type, width):
+    if width > 1300:
+        if plot_type in ['LP-PT', 'SP-PT']:
+            return ["Sites:", {"display": "none"}]
+        else:
+            return ["Site 1 (For Parameter 1):",
+                {"text-align": "left", "font-weight": "bold", "padding-left": 75}]
     else:
-        return ["Site 1 (For Parameter 1):",
-               {"text-align": "left", "font-weight": "bold", "padding-left": 75}]
+        if plot_type in ['LP-PT', 'SP-PT']:
+            return ["Sites:", {"display": "none"}]
+        else:
+            return ["Site 1 (For Parameter 1):",
+                {"text-align": "left", "font-weight": "bold", "padding-left": 12}]
 
 # Grabs screen size and stores it in empty Div
 dash_app.clientside_callback(
@@ -676,16 +743,94 @@ dash_app.clientside_callback(
 @callback(
     Output("param-text-1", "children"),
     Output("param-text-2", "style"),
-    Input("plot-type-dropdown", "value"))
+    Output("second-param-div", "style"),
+    Input("plot-type-dropdown", "value"),
+    Input("window-check", "children"))
 
-def param_text_update(plot_type):
+def param_text_update(plot_type, width):
     if plot_type in ["LP-PT", "SP-PT"]:
-        return ["Parameter:", {"display": "none"}]
+        return ["Parameter:",
+                {"display": "none"},
+                {"width": "35%", "display": "inline-block", "padding-left": 75}]
     else:
-        return ["Parameter 1:", 
-               {"text-align": "left", "font-weight": "bold", "padding-left": 75, "padding-right": "24.5%"}]
-    
-            
+        if width > 1300:
+            return ["Parameter 1:", 
+                {"text-align": "left", "font-weight": "bold", "padding-left": 75, "padding-right": "24.5%"},
+                {"width": "35%", "display": "inline-block", "padding-left": 75}]
+        else:
+            return ["Parameter 1:", 
+                {"text-align": "left", "font-weight": "bold", "padding-left": 12, "padding-right": "24.5%"},
+                {"width": "90%", "display": "inline-block", "padding-left": 12}]
+@callback(
+    Output("title-text", "style"),
+    Output("crop-label", "style"),
+    Output("crop-radio", "style"),
+    Output("site-label-1", "style"),
+    Output("site-select-div", "style"),
+    Output("equip-group-div", "style"),
+    Output("param-select-div", "style"),
+    Output("map-graph", "style"),
+    Output("norm-graph", "style"),
+    Input("window-check", "children")
+
+)
+
+def part_1_mobile_adjust(width):
+    if width > 1300:
+        return [
+            {"display": "inline-block", "margin-left": "35%", "vertical-align": "50%"},
+            {"text-align": "left", "font-weight": "bold", "padding-left": 75},
+            {"margin-bottom": 10, "padding-left": 71, "margin-top": 10, "margin-bottom": 20, 
+             "display": "inline-block"},
+            {"text-align": "left", "font-weight": "bold", "padding-left": 75},
+            {"width": "35%", "display": "inline-block", "padding-left": 75},
+            {"width": "35%", "display": "inline-block", "padding-left": 75},
+            {"display": "inline-block", "width": "35%", "padding-left": 75},
+            {"width": "35%", "display": "inline-block", "padding-left": 75},
+            {"width": "57%", "display": "inline-flex", "margin-left": 35}
+        ]
+    else:
+        return [
+            {"display": "inline-block", "margin-left": "2.5%", "vertical-align": "50%",
+             "text-align": "center"},
+            {"text-align": "left", "font-weight": "bold", "padding-left": 12},
+            {"margin-bottom": 10, "padding-left": 7, "margin-top": 10, "margin-bottom": 20, 
+             "display": "inline-block"},
+            {"text-align": "left", "font-weight": "bold", "padding-left": 12},
+            {"width": "90%", "display": "inline-block", "padding-left": 12},
+            {"width": "90%", "display": "inline-block", "padding-left": 12},
+            {"display": "inline-block", "width": "90%", "padding-left": 12, "margin-bottom": -10},
+            {"width": "95%", "display": "inline-block", "padding-left": 12},
+            {"width": "103%", "display": "inline-flex", "margin-left": -20}
+        ]
+
+@callback(
+    Output("plot-type-dropdown", "value"),
+    Output("plot-type-dropdown-mobile", "style"),
+    Output("plot-type-label-mobile", "style"),
+    Output("plot-type-dropdown", "style"),
+    Input("plot-type-dropdown-mobile", "value"),
+    Input("window-check", "children"),
+    Input("plot-type-dropdown", "value")
+)
+
+def plot_type_dropdown_mobile(value, width, orig_val):
+    if width > 1300:
+        return [
+            orig_val,
+            {"display": "none"},
+            {"display": "none"},
+            {}
+        ]
+    else:
+        return [
+            value,
+            {"width": "90%", "display": "inline-block", "padding-left": 12},
+            {"text-align": "center", "font-weight": "bold", "margin-left": 12, 'display': "inline-block",
+             "margin-top": 10, "margin-bottom": 5},
+            {"display": "none"}
+        ]
+
 
 # Generates and customizes map.
 # Displays sites on map depending on user input from radio items.
@@ -715,31 +860,18 @@ def plot_map(sites, custom_sites):
             coords_temp = coords[coords["Site"] == custom_sites]
             h_set = 8
 
-    
-    try:
-        fig = px.scatter_mapbox(coords_temp, lat = "Lat", lon = "Lon", hover_name = "Site",
-                                zoom = h_set, height = 450,
-                                center = {"lat": mean(coords_temp.iloc[:,0]), "lon": mean(coords_temp.iloc[:,1])},
-                                color = "Crop",
-                                color_discrete_map={
-                                "Almonds": "Blue",
-                                "Olives": "Red",
-                                "Pistachios": "Green",
-                                "Grapes": "Purple",
-                                "Table Grapes": "Yellow"}
-                                )
-    except:
-        fig = px.scatter_mapbox(coords_temp, lat = "Lat", lon = "Lon", hover_name = "Site",
-                                zoom = h_set, height = 450,
-                                center = {"lat": float(coords_temp.iloc[0,0]), "lon": float(coords_temp.iloc[0,1])},
-                                color = "Crop",
-                                color_discrete_map={
-                                "Almonds": "Blue",
-                                "Olives": "Red",
-                                "Pistachios": "Green",
-                                "Grapes": "Purple",
-                                "Table Grapes": "Yellow"}
-                                )
+        
+    fig = px.scatter_mapbox(coords_temp, lat = "Lat", lon = "Lon", hover_name = "Site",
+                            zoom = h_set, height = 450,
+                            center = {"lat": mean(coords_temp.iloc[:,0]), "lon": mean(coords_temp.iloc[:,1])},
+                            color = "Crop",
+                            color_discrete_map={
+                            "Almonds": "Blue",
+                            "Olives": "Red",
+                            "Pistachios": "Green",
+                            "Grapes": "Purple",
+                            "Table Grapes": "Yellow"}
+                            )
     
 #     # Creates boundaries for each ranch.
     
@@ -778,9 +910,10 @@ def plot_map(sites, custom_sites):
     Input("plot-type-dropdown", "value"),
     Input("site-selection", "value"),
     Input("second-param", "value"),
-    Input("second-site", "value"))
+    Input("second-site", "value"),
+    Input("window-check", "children"))
 
-def plot_graph(crops, yaxis_column_name, plot, first_drop, second_param, second_site):
+def plot_graph(crops, yaxis_column_name, plot, first_drop, second_param, second_site, width):
     if plot in ['LP-PT', 'SP-PT']:
         site_drop = first_drop
     else:
@@ -809,8 +942,7 @@ def plot_graph(crops, yaxis_column_name, plot, first_drop, second_param, second_
             temp = combine_df.Site.isin(sites)
             data_temp = combine_df[temp]
         except:
-            data_temp = combine_df[combine_df["Site"] == sites]
-            
+            data_temp = combine_df[combine_df["Site"] == sites]       
         
     # Dash will use generate one plot depending on user input, data is the same, plots have slight visual tweaks. 
     
@@ -886,7 +1018,7 @@ def plot_graph(crops, yaxis_column_name, plot, first_drop, second_param, second_
         ),
         rangeslider=dict(
             visible=True,
-            thickness = .1,
+            thickness = .1
         ),
         type="date"
     )
@@ -1026,12 +1158,18 @@ def plot_graph(crops, yaxis_column_name, plot, first_drop, second_param, second_
 #         fig.update_traces(hovertemplate = '<b>'+site_drop+'</b><br>'
 #                           'TIMESTAMP: %{x|%Y-%m-%d %H:%M}<br>'+
 #                           '%{customdata}'+': %{y}<extra></extra>')
+    if width > 1300:
         fig.update_layout(legend_title_text = "Parameters (Click to Toggle)",
                           yaxis_title = site_drop[0] + ': ' + yaxis_column_name +
                           " / "+ site_drop[1] + ': ' + second_param,
                           xaxis_title = "TIMESTAMP",
                           title = "Data for Sites: " + site_drop[0] + " and " + site_drop[1])
-
+    else:
+        fig.update_layout(legend_title_text = "Parameters",
+                          yaxis_title = site_drop[0] + ': ' + yaxis_column_name +
+                          " / "+ site_drop[1] + ': ' + second_param,
+                          xaxis_title = "TIMESTAMP",
+                          title = "Data for Sites: " + site_drop[0] + " and " + site_drop[1])
         
     fig.update_traces({'marker':{'size':3.5}})
 
@@ -1065,6 +1203,3 @@ if __name__ == '__main__':
 
 # if __name__ == "__main__":
 #     app.run(host="127.0.0.1", port=8080, debug=True)
-
-
-
