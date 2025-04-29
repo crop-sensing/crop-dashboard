@@ -1,18 +1,11 @@
 from flask import Flask
 import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib.lines import Line2D
-import matplotlib.dates as mdates
-from matplotlib import rcParams
 import datetime
 from datetime import datetime
-import os
 from datetime import timedelta
 from datetime import date
 from dateutil.relativedelta import relativedelta
 import numpy as np
-import fnmatch
-from matplotlib.backends.backend_pdf import PdfPages
 import plotly.graph_objects as go
 from dash import Dash, html, dcc, callback, Output, Input, dash_table, State
 import plotly.express as px
@@ -27,7 +20,7 @@ trex_all["TIMESTAMP"] = [datetime.strptime(time, time_format) for time in trex_a
 matt_all = pd.read_csv("/home/audreypet/crop-dashboard/sample-data/matt_data.csv")
 matt_all["TIMESTAMP"] = [datetime.strptime(time, time_format) for time in matt_all["TIMESTAMP"]]
 
-range_path = "/home/audreypet/crop-dashboard/read-in-csvs/all_dl_range.csv"
+range_path = "/home/audreypet/crop-dashboard/read-in-csvs/all_dl_ranges.csv"
 rangedf = pd.read_csv(range_path, header=[0],sep=',',na_values="NAN",engine='python')
 
 test_calls = ['e_probe', 'e_sat_probe', 'H2O_probe', 'RH_3_1_1', 'T_DP_3_1_1', 'FW', 'H_FW', 'SW_IN', 'SW_OUT', 'LW_IN', 'LW_OUT', 'TA_3_1_1', 'T_CANOPY', 'G', 'CO2_sig_strgth_Min', 'H2O_sig_strgth_Min', 'CO2_density', 'H2O_density', 'LE', 'H', 'VPD', 'P_Tot', 'batt_volt']
@@ -129,8 +122,8 @@ dash_app.layout = [html.Div([
         # Title and image at the top.
         
         html.Div([
-            html.H1(["SAWS Data Dashboard"], 
-                style = {"display": "inline-block", "margin-left": "37.5%", "vertical-align": "50%"}),
+            html.H1(["Crop Sensing Group Flux Dashboard"], 
+                style = {"display": "inline-block", "margin-left": "35%", "vertical-align": "50%", "text-align": "center"}),
             # html.Img(src=dash_app.get_asset_url('usda.png'), 
             #      style = {"width": 55, "display": "inline-block", "vertical-align": "10%", "margin-left": 10})
         ]),
@@ -317,7 +310,7 @@ dash_app.layout = [html.Div([
                   data = {"drop2": "option2"}),
         dcc.Store(id = "drop3-store",
                   data = {"drop3": "option3"})],
-        style = {"font-family": "Helvetica, sans-serif"})
+        style = {"font-family": "Helvetica, sans-serif", "background-color": "white"})
              ]
 
 
@@ -983,7 +976,7 @@ def plot_graph(crops, yaxis_column_name, plot, first_drop, second_param, second_
                 ])
             ),
             rangeslider=dict(
-                visible=False,
+                visible=True,
                 thickness = .1,
             ),
             type="date"
@@ -1062,6 +1055,8 @@ def plot_graph(crops, yaxis_column_name, plot, first_drop, second_param, second_
     
     
     return fig
+
+application = server
 
 if __name__ == '__main__':
     dash_app.run(debug=True)
