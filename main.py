@@ -19,6 +19,9 @@ trex_all["TIMESTAMP"] = [datetime.strptime(time, time_format) for time in trex_a
 
 matt_all = pd.read_csv("/home/audreypet/crop-dashboard/sample-data/matt_data.csv")
 matt_all["TIMESTAMP"] = [datetime.strptime(time, time_format) for time in matt_all["TIMESTAMP"]]
+trex_all.LW_IN = trex_all.LW_IN.astype(float)
+trex_drop = trex_all[trex_all.LW_IN < -1000000000].index
+trex_all.drop(trex_drop, inplace = True)
 
 range_path = "/home/audreypet/crop-dashboard/read-in-csvs/all_dl_ranges.csv"
 rangedf = pd.read_csv(range_path, header=[0],sep=',',na_values="NAN",engine='python')
@@ -635,16 +638,16 @@ def show_second_site(num_param, width):
     if width > 1300:
         if num_param in ['LP-PT', 'SP-PT']:
             return [{"display": "none"},
-                    {"width": "29.75%", "display": "inline-block", "padding-left": 75,
+                    {"width": "35%", "display": "inline-block", "padding-left": 75,
                                                 "margin-top": 10}]
         else:
             return [{"margin-top": 5, "margin-right": "15%", "margin-bottom": 10},
-                    {"width": "29.75%", "display": "inline-block", "padding-left": 75,
+                    {"width": "35%", "display": "inline-block", "padding-left": 75,
                                                 "margin-top": 10}]
     else:
         if num_param in ['LP-PT', 'SP-PT']:
             return [{"display": "none"},
-                    {"width": "29.75%", "display": "inline-block", "padding-left": 12,
+                    {"width": "90%", "display": "inline-block", "padding-left": 12,
                                                 "margin-top": 10}]
         else:
             return [{"margin-top": 5, "margin-right": "15%", "margin-bottom": 10},
@@ -778,7 +781,7 @@ def param_text_update(plot_type, width):
 def part_1_mobile_adjust(width):
     if width > 1300:
         return [
-            {"display": "inline-block", "margin-left": "35%", "vertical-align": "50%"},
+            {"display": "inline-block", "width": "100%", "vertical-align": "50%", "text-align": "center"},
             {"text-align": "left", "font-weight": "bold", "padding-left": 75},
             {"margin-bottom": 10, "padding-left": 71, "margin-top": 10, "margin-bottom": 20, 
              "display": "inline-block"},
@@ -791,8 +794,7 @@ def part_1_mobile_adjust(width):
         ]
     else:
         return [
-            {"display": "inline-block", "margin-left": "2.5%", "vertical-align": "50%",
-             "text-align": "center"},
+            {"display": "inline-block", "width": "100%", "vertical-align": "50%", "text-align": "center"},
             {"text-align": "left", "font-weight": "bold", "padding-left": 12},
             {"margin-bottom": 10, "padding-left": 7, "margin-top": 10, "margin-bottom": 20, 
              "display": "inline-block"},
@@ -996,7 +998,10 @@ def plot_graph(crops, yaxis_column_name, plot, first_drop, second_param, second_
     
         fig.update_traces(hovertemplate = '<b>%{customdata}</b><br>' +
                   'TIMESTAMP: %{x|%Y-%m-%d %H:%M}<br>'+yaxis_column_name+': %{y}<extra></extra>')
-        fig.update_layout(legend_title_text = "Sites (Click to Toggle)")
+        if width > 1300:
+            fig.update_layout(legend_title_text = "Sites (Click to Toggle)")
+        else:
+            fig.update_layout(legend_title_text = "Sites")
         fig.update_layout(
         xaxis=dict(
         rangeselector=dict(
@@ -1158,18 +1163,18 @@ def plot_graph(crops, yaxis_column_name, plot, first_drop, second_param, second_
 #         fig.update_traces(hovertemplate = '<b>'+site_drop+'</b><br>'
 #                           'TIMESTAMP: %{x|%Y-%m-%d %H:%M}<br>'+
 #                           '%{customdata}'+': %{y}<extra></extra>')
-    if width > 1300:
-        fig.update_layout(legend_title_text = "Parameters (Click to Toggle)",
-                          yaxis_title = site_drop[0] + ': ' + yaxis_column_name +
-                          " / "+ site_drop[1] + ': ' + second_param,
-                          xaxis_title = "TIMESTAMP",
-                          title = "Data for Sites: " + site_drop[0] + " and " + site_drop[1])
-    else:
-        fig.update_layout(legend_title_text = "Parameters",
-                          yaxis_title = site_drop[0] + ': ' + yaxis_column_name +
-                          " / "+ site_drop[1] + ': ' + second_param,
-                          xaxis_title = "TIMESTAMP",
-                          title = "Data for Sites: " + site_drop[0] + " and " + site_drop[1])
+        if width > 1300:
+            fig.update_layout(legend_title_text = "Parameters (Click to Toggle)",
+                            yaxis_title = site_drop[0] + ': ' + yaxis_column_name +
+                            " / "+ site_drop[1] + ': ' + second_param,
+                            xaxis_title = "TIMESTAMP",
+                            title = "Data for Sites: " + site_drop[0] + " and " + site_drop[1])
+        else:
+            fig.update_layout(legend_title_text = "Parameters",
+                            yaxis_title = site_drop[0] + ': ' + yaxis_column_name +
+                            " / "+ site_drop[1] + ': ' + second_param,
+                            xaxis_title = "TIMESTAMP",
+                            title = "Data for Sites: " + site_drop[0] + " and " + site_drop[1])
         
     fig.update_traces({'marker':{'size':3.5}})
 
