@@ -25,7 +25,7 @@ trex_all.drop(trex_drop, inplace = True)
 st = ["TS1_2cm", "TS1_6cm", "TS2_2cm", "TS2_6cm", "TS3_2cm", "TS3_6cm", "TS4_2cm", "TS4_6cm", "TS5_2cm", "TS5_6cm",]
 
 for param in st:
-    trex_drop = trex_all[trex_all.param < -10000000].index
+    trex_drop = trex_all[trex_all[param] < -10000000].index
     trex_all.drop(trex_drop, inplace = True)
 
 range_path = "/home/audreypet/crop-dashboard/read-in-csvs/all_dl_ranges.csv"
