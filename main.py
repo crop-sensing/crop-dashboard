@@ -20,8 +20,13 @@ trex_all["TIMESTAMP"] = [datetime.strptime(time, time_format) for time in trex_a
 matt_all = pd.read_csv("/home/audreypet/crop-dashboard/sample-data/matt_data.csv")
 matt_all["TIMESTAMP"] = [datetime.strptime(time, time_format) for time in matt_all["TIMESTAMP"]]
 trex_all.LW_IN = trex_all.LW_IN.astype(float)
-trex_drop = trex_all[trex_all.LW_IN < -1000000000].index
+trex_drop = trex_all[trex_all.LW_IN < -10000000].index
 trex_all.drop(trex_drop, inplace = True)
+st = ["TS1_2cm", "TS1_6cm", "TS2_2cm", "TS2_6cm", "TS3_2cm", "TS3_6cm", "TS4_2cm", "TS4_6cm", "TS5_2cm", "TS5_6cm",]
+
+for param in st:
+    trex_drop = trex_all[trex_all.param < -10000000].index
+    trex_all.drop(trex_drop, inplace = True)
 
 range_path = "/home/audreypet/crop-dashboard/read-in-csvs/all_dl_ranges.csv"
 rangedf = pd.read_csv(range_path, header=[0],sep=',',na_values="NAN",engine='python')
