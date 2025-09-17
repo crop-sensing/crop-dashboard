@@ -11,24 +11,34 @@ from dash import Dash, html, dcc, callback, Output, Input, dash_table, State
 import plotly.express as px
 from statistics import mean
 
+launch = "github"
 
+if launch == "python_anywhere":
+    static_path = "/home/audreypet/crop-dashboard"
+elif launch == "github":
+    static_path = "C:/Users/cpetrosi/Documents/GitHub/crop-dashboard"
 
-trex_all = pd.read_csv("/home/audreypet/crop-dashboard/sample-data/trex_data.csv")
+trex_all = pd.read_csv(f"{static_path}/sample-data/trex_data.csv")
 time_format = "%Y-%m-%d %H:%M:%S"
 trex_all["TIMESTAMP"] = [datetime.strptime(time, time_format) for time in trex_all["TIMESTAMP"]]
 
-matt_all = pd.read_csv("/home/audreypet/crop-dashboard/sample-data/matt_data.csv")
+lynn_all = pd.read_csv(f"{static_path}/sample-data/lynn_data.csv")
+lynn_all["TIMESTAMP"] = [datetime.strptime(time, time_format) for time in lynn_all["TIMESTAMP"]]
+
+matt_all = pd.read_csv(f"{static_path}/sample-data/matt_data.csv")
 matt_all["TIMESTAMP"] = [datetime.strptime(time, time_format) for time in matt_all["TIMESTAMP"]]
 trex_all.LW_IN = trex_all.LW_IN.astype(float)
 trex_drop = trex_all[trex_all.LW_IN < -10000000].index
 trex_all.drop(trex_drop, inplace = True)
 st = ["TS1_2cm", "TS1_6cm", "TS2_2cm", "TS2_6cm", "TS3_2cm", "TS3_6cm", "TS4_2cm", "TS4_6cm", "TS5_2cm", "TS5_6cm",]
 
+matt_all = pd.concat([matt_all, lynn_all])
+
 for param in st:
     trex_drop = trex_all[trex_all[param] < -10000000].index
     trex_all.drop(trex_drop, inplace = True)
 
-range_path = "/home/audreypet/crop-dashboard/read-in-csvs/all_dl_ranges.csv"
+range_path = f"{static_path}/read-in-csvs/all_dl_ranges.csv"
 rangedf = pd.read_csv(range_path, header=[0],sep=',',na_values="NAN",engine='python')
 
 test_calls = ['e_probe', 'e_sat_probe', 'H2O_probe', 'RH_3_1_1', 'T_DP_3_1_1', 'FW', 'H_FW', 'SW_IN', 'SW_OUT', 'LW_IN', 'LW_OUT', 'TA_3_1_1', 'T_CANOPY', 'G', 'CO2_sig_strgth_Min', 'H2O_sig_strgth_Min', 'CO2_density', 'H2O_density', 'LE', 'H', 'VPD', 'P_Tot', 'batt_volt']
@@ -39,16 +49,16 @@ reports = ['G', 'G_1_1_1', 'G_2_1_1', 'G_3_1_1', 'G_4_1_1', 'G_5_1_1', 'SG_1_1_1
 almonds = ["VAC", "OLA", "WWF", "WES"]
 olives = ["ART_011", "ORO_022", "ORO_043", "COR_CS3"]
 pistachios = ["BLS_001", "BLS_002"]
-grapes = ["FLT", "SLC"]
+grapes = ["FLT", "SLC", "SLM_001", "VOK_001", "RIP_722", "RIP_760"]
 # Read in parameters classified by equipment group
-almond_list = pd.read_csv("/home/audreypet/crop-dashboard/read-in-csvs/Almond_Equipment.csv")
-grape_list = pd.read_csv("/home/audreypet/crop-dashboard/read-in-csvs/Grape_Equipment.csv")
-olive_list = pd.read_csv("/home/audreypet/crop-dashboard/read-in-csvs/Olive_Equipment.csv")
-pistachio_list = pd.read_csv("/home/audreypet/crop-dashboard/read-in-csvs/Pistachio_Equipment.csv")
+almond_list = pd.read_csv(f"{static_path}/read-in-csvs/Almond_Equipment.csv")
+grape_list = pd.read_csv(f"{static_path}/read-in-csvs/Grape_Equipment.csv")
+olive_list = pd.read_csv(f"{static_path}/read-in-csvs/Olive_Equipment.csv")
+pistachio_list = pd.read_csv(f"{static_path}/read-in-csvs/Pistachio_Equipment.csv")
 
 # Read in coordinates for sites
-coords = pd.read_csv("/home/audreypet/crop-dashboard/read-in-csvs/Site_Long_Lat.csv")
-area = pd.read_csv("/home/audreypet/crop-dashboard/read-in-csvs/Site_Area_Coords.csv")
+coords = pd.read_csv(f"{static_path}/read-in-csvs/Site_Long_Lat.csv")
+area = pd.read_csv(f"{static_path}/read-in-csvs/Site_Area_Coords.csv")
 
 
 # Creates a dictionary that lists which parameters exist for each crop. Used to populate dropdowns based on crops later.
@@ -100,10 +110,10 @@ last_week = relativedelta(weeks=+1)
 # Assigns sites to crops.
 
 site_dict = {
-    "Almonds": ["OLA", "WWF", "VAC", "WES"],
-    "Grapes": ["SLC", "FLT"],
-    "Olives": ["ORO_022", "ORO_043", "COR_CS3", "ART_011"],
-    "Pistachios": ["BLS_001", "BLS_002"],
+    "Almonds": almonds,
+    "Grapes": grapes,
+    "Olives": olives,
+    "Pistachios": pistachios,
     "Table Grapes": ["BRO_001"],
     "Custom": ["OLA", "WWF", "VAC", "WES", "SLC", "FLT", "ORO_022", 
                "ORO_043", "COR_CS3", "ART_011", "BLS_001", "BLS_002", "BRO_001"]
