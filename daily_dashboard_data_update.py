@@ -158,26 +158,35 @@ lynn_all.to_csv("C:/Users/cpetrosi/Documents/Github/crop-dashboard/sample-data/l
 
 
 
-# username = 'audreypet'
-# token = '0540c9dd2b156af5308aec5ad02d3e97039f98b6'  # found in your PythonAnywhere account
-# file_path = "C:/Users/cpetrosi/Desktop/Dashboard/Data/matt_data.csv"
-# upload_path = "/home/audreypet/crop-dashboard/sample-data/matt_data.csv"
+username = 'audreypet'
+token = '0540c9dd2b156af5308aec5ad02d3e97039f98b6'  # found in your PythonAnywhere account
+file_path = "C:/Users/cpetrosi/Documents/GitHub/crop-dashboard/sample-data/trex_data.csv"
+upload_path = "/home/audreypet/crop-dashboard/sample-data/matt_data.csv"
 
-# with open(file_path, 'rb') as f:
-#     response = requests.post(
-#         f'https://www.pythonanywhere.com/api/v0/user/{username}/files/path{upload_path}',
-#         headers={'Authorization': f'Token {token}'},
-#         files={'content': f}
-#     )
+with open(file_path, 'rb') as f:
+    response = requests.post(
+        f'https://www.pythonanywhere.com/api/v0/user/{username}/files/path{upload_path}',
+        headers={'Authorization': f'Token {token}'},
+        files={'content': f}
+    )
 
 
-# file_path = "C:/Users/cpetrosi/Desktop/Dashboard/Data/trex_data.csv"
-# upload_path = "/home/audreypet/crop-dashboard/sample-data/trex_data.csv"
+file_path = "C:/Users/cpetrosi/Documents/Github/crop-dashboard/sample-data/matt_data.csv"
+upload_path = "/home/audreypet/crop-dashboard/sample-data/trex_data.csv"
 
-# with open(file_path, 'rb') as f:
-#     response = requests.post(
-#         f'https://www.pythonanywhere.com/api/v0/user/{username}/files/path{upload_path}',
-#         headers={'Authorization': f'Token {token}'},
-#         files={'content': f}
-#     )
+with open(file_path, 'rb') as f:
+    response = requests.post(
+        f'https://www.pythonanywhere.com/api/v0/user/{username}/files/path{upload_path}',
+        headers={'Authorization': f'Token {token}'},
+        files={'content': f}
+    )
 
+file_path = "C:/Users/cpetrosi/Documents/Github/crop-dashboard/sample-data/lynn_data.csv"
+upload_path = "/home/audreypet/crop-dashboard/sample-data/lynn_data.csv"
+
+with open(file_path, 'rb') as f:
+    response = requests.post(
+        f'https://www.pythonanywhere.com/api/v0/user/{username}/files/path{upload_path}',
+        headers={'Authorization': f'Token {token}'},
+        files={'content': f}
+    )

@@ -32,7 +32,7 @@ trex_drop = trex_all[trex_all.LW_IN < -10000000].index
 trex_all.drop(trex_drop, inplace = True)
 st = ["TS1_2cm", "TS1_6cm", "TS2_2cm", "TS2_6cm", "TS3_2cm", "TS3_6cm", "TS4_2cm", "TS4_6cm", "TS5_2cm", "TS5_6cm",]
 
-matt_all = pd.concat([matt_all, lynn_all])
+trex_all = pd.concat([trex_all, lynn_all])
 
 for param in st:
     trex_drop = trex_all[trex_all[param] < -10000000].index
@@ -115,8 +115,8 @@ site_dict = {
     "Olives": olives,
     "Pistachios": pistachios,
     "Table Grapes": ["BRO_001"],
-    "Custom": ["OLA", "WWF", "VAC", "WES", "SLC", "FLT", "ORO_022", 
-               "ORO_043", "COR_CS3", "ART_011", "BLS_001", "BLS_002", "BRO_001"]
+    "Custom": ["OLA", "WWF", "VAC", "WES", "SLC", "FLT", "SLM_001", "VOK_001", "RIP_722", "RIP_760",
+               "ORO_022", "ORO_043", "COR_CS3", "ART_011", "BLS_001", "BLS_002", "BRO_001"]
 }
     
 
@@ -864,7 +864,7 @@ def plot_map(sites, custom_sites):
     if sites != "Custom":
         coords_temp = coords[coords["Crop"] == sites]
         area_temp = area[area["Crop"] == sites]
-        if sites != "Almonds":
+        if sites != "Almonds" and sites != "Grapes":
             h_set = 8
         else:
             h_set = 6.1
@@ -967,40 +967,40 @@ def plot_graph(crops, yaxis_column_name, plot, first_drop, second_param, second_
         if plot == "LP-PT":
             fig = px.line(data_temp, x = data_temp.TIMESTAMP, y = data_temp[yaxis_column_name], custom_data = ["Site"],
                          color = data_temp.Site,
-                         color_discrete_map={
-                        "BLS_001": "lime",
-                        "BLS_002": "blue",
-                        "ORO_022": "goldenrod",
-                        "ORO_043": "green",
-                        "COR_CS3": "magenta",
-                        "ART_011": "red",
-                        "OLA": "olive",
-                        "WWF": "steelblue",
-                        "VAC": "saddlebrown",
-                        "SLC": "orange",
-                        "FLT": "black",
-                        "WES": "darkmagenta",
-                        "BRO_001": "gold"},
+                        #  color_discrete_map={
+                        # "BLS_001": "lime",
+                        # "BLS_002": "blue",
+                        # "ORO_022": "goldenrod",
+                        # "ORO_043": "green",
+                        # "COR_CS3": "magenta",
+                        # "ART_011": "red",
+                        # "OLA": "olive",
+                        # "WWF": "steelblue",
+                        # "VAC": "saddlebrown",
+                        # "SLC": "orange",
+                        # "FLT": "black",
+                        # "WES": "darkmagenta",
+                        # "BRO_001": "gold"},
                          height = 490)
             fig.update_traces(line={'width': 1.5})
 
         else:
             fig = px.scatter(data_temp, x = data_temp.TIMESTAMP, y = data_temp[yaxis_column_name], color = data_temp.Site,
                          custom_data = ["Site"],
-                         color_discrete_map={
-                        "BLS_001": "lime",
-                        "BLS_002": "blue",
-                        "ORO_022": "goldenrod",
-                        "ORO_043": "green",
-                        "COR_CS3": "magenta",
-                        "ART_011": "red",
-                        "OLA": "olive",
-                        "WWF": "steelblue",
-                        "VAC": "saddlebrown",
-                        "SLC": "orange",
-                        "FLT": "black",
-                        "WES": "darkmagenta",
-                        "BRO_001": "gold"},
+                        #  color_discrete_map={
+                        # "BLS_001": "lime",
+                        # "BLS_002": "blue",
+                        # "ORO_022": "goldenrod",
+                        # "ORO_043": "green",
+                        # "COR_CS3": "magenta",
+                        # "ART_011": "red",
+                        # "OLA": "olive",
+                        # "WWF": "steelblue",
+                        # "VAC": "saddlebrown",
+                        # "SLC": "orange",
+                        # "FLT": "black",
+                        # "WES": "darkmagenta",
+                        # "BRO_001": "gold"},
                          height = 490)
         # Assigns starting range for plot based on parameter.
         # Still allows user to pan up/down and left/right.
