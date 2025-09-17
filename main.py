@@ -11,7 +11,7 @@ from dash import Dash, html, dcc, callback, Output, Input, dash_table, State
 import plotly.express as px
 from statistics import mean
 
-launch = "github"
+launch = "python_anywhere"
 
 if launch == "python_anywhere":
     static_path = "/home/audreypet/crop-dashboard"
