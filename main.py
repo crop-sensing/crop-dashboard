@@ -12,11 +12,12 @@ import plotly.express as px
 from statistics import mean
 
 launch = "python_anywhere"
+user = "cpetrosi"
 
 if launch == "python_anywhere":
     static_path = "/home/audreypet/crop-dashboard"
 elif launch == "github":
-    static_path = "C:/Users/cpetrosi/Documents/GitHub/crop-dashboard"
+    static_path = f"C:/Users/{user}/Documents/GitHub/crop-dashboard"
 
 trex_all = pd.read_csv(f"{static_path}/sample-data/trex_data.csv")
 time_format = "%Y-%m-%d %H:%M:%S"
