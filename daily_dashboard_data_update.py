@@ -8,6 +8,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 import numpy as np
 import requests
+import json
 
 
 """TREX DF CREATION"""
@@ -156,10 +157,12 @@ lynn_all = lynn_all[lynn_all["TIMESTAMP"] > last_month]
 lynn_all.to_csv("C:/Users/cpetrosi/Documents/Github/crop-dashboard/sample-data/lynn_data.csv")
 
 
+with open("C:/Users/cpetrosi/Documents/GitHub/crop-dashboard/hidden_file.json", 'r') as file:
+   user_info = json.load(file)
 
+username = user_info["username"]
+token = user_info["token"]  # found in your PythonAnywhere account
 
-username = 'audreypet'
-token = '0540c9dd2b156af5308aec5ad02d3e97039f98b6'  # found in your PythonAnywhere account
 file_path = "C:/Users/cpetrosi/Documents/GitHub/crop-dashboard/sample-data/trex_data.csv"
 upload_path = "/home/audreypet/crop-dashboard/sample-data/trex_data.csv"
 
