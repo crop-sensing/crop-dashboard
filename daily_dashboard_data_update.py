@@ -16,7 +16,7 @@ import json
 user = "cpetrosi"
 
 path = f'C:/Users/{user}/Box/TREX/MISCELLANEOUS/Datalogger_Report_Files'
-sites = ['OLA', 'WWF', 'VAC', 'SLC', 'FLT', 'WES']
+sites = ['OLA_001', 'WWF_001', 'VAC_001', 'SLC_001', 'FLT_001', 'WES_002']
 
 #range df is a csv containing the min and max values for each parameter in the csiformat files
 rangepath = f"C:/Users/{user}/Box/TREX/MISCELLANEOUS/Datalogger_Report_Files/suplementary/all_dl_ranges.csv"
@@ -41,6 +41,7 @@ for i in range(0,6):
   dff=dff.sort_values(by=['TIMESTAMP'])
   dff=dff.drop_duplicates()
   dff_all=dff
+  dff['Site'] = sites[i]
   all_st.append(dff_all)
 df_all=pd.concat(all_st)
 
@@ -80,7 +81,7 @@ test_calls = ['e_probe', 'e_sat_probe', 'H2O_probe', 'RH_3_1_1', 'T_DP_3_1_1', '
 
 
 path = f'C:/Users/{user}/Box/TREX/MISCELLANEOUS/Datalogger_Report_Files'
-sites = ['BLS_001', 'BLS_002', 'ORO_022', 'ORO_043', 'COR_CS3', 'ART_011', 'BRO_001']
+sites = ['BLS_001', 'BLS_002', 'ORO_022', 'ORO_043', 'COR_003', 'ART_011', 'BRO_001']
 
 rangepath = f"C:/Users/{user}/Box/TREX/MISCELLANEOUS/Datalogger_Report_Files/suplementary/all_dl_ranges.csv"
 rangedf = pd.read_csv(rangepath, header=[0],sep=',',na_values="NAN",engine='python')

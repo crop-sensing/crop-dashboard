@@ -47,10 +47,10 @@ test_calls = ['e_probe', 'e_sat_probe', 'H2O_probe', 'RH_3_1_1', 'T_DP_3_1_1', '
 reports = ['G', 'G_1_1_1', 'G_2_1_1', 'G_3_1_1', 'G_4_1_1', 'G_5_1_1', 'SG_1_1_1', 'SG_2_1_1', 'SG_3_1_1', 'SG_4_1_1', 'SG_5_1_1', 'G_plate_1_1_1', 'G_plate_2_1_1', 'G_plate_3_1_1', 'G_plate_4_1_1', 'G_plate_5_1_1', 'TS1_2cm', 'TS1_6cm', 'TS2_2cm', 'TS2_6cm', 'TS3_2cm', 'TS3_6cm','TS4_2cm', 'TS4_6cm', 'TS5_2cm', 'TS5_6cm', 'SWC_1_1_1', 'SWC_2_1_1', 'SWC_3_1_1', 'SWC_4_1_1', 'SWC_5_1_1', 'SW_IN', 'SW_OUT', 'LW_IN', 'LW_OUT', 'TA_1_1_3', 'T_CANOPY', 'CO2_sig_strgth_Min', 'H2O_sig_strgth_Min', 'CO2_density', 'H2O_density', 'LE', 'H', 'VPD', 'P', 'V_batt']
 
 
-almonds = ["VAC", "OLA", "WWF", "WES"]
-olives = ["ART_011", "ORO_022", "ORO_043", "COR_CS3"]
+almonds = ["VAC_001", "OLA_001", "WWF_001", "WES_002"]
+olives = ["ART_011", "ORO_022", "ORO_043", "COR_003"]
 pistachios = ["BLS_001", "BLS_002"]
-grapes = ["FLT", "SLC", "SLM_001", "VOK_001", "RIP_722", "RIP_760"]
+grapes = ["FLT_001", "SLC_001", "SLM_001", "VOK_001", "RIP_722", "RIP_760"]
 # Read in parameters classified by equipment group
 almond_list = pd.read_csv(f"{static_path}/read-in-csvs/Almond_Equipment.csv")
 grape_list = pd.read_csv(f"{static_path}/read-in-csvs/Grape_Equipment.csv")
@@ -116,8 +116,8 @@ site_dict = {
     "Olives": olives,
     "Pistachios": pistachios,
     "Table Grapes": ["BRO_001"],
-    "Custom": ["OLA", "WWF", "VAC", "WES", "SLC", "FLT", "SLM_001", "VOK_001", "RIP_722", "RIP_760",
-               "ORO_022", "ORO_043", "COR_CS3", "ART_011", "BLS_001", "BLS_002", "BRO_001"]
+    "Custom": ["OLA_001", "WWF_001", "VAC_001", "WES_001", "SLC_001", "FLT_001", "SLM_001", "VOK_001", "RIP_722", "RIP_760",
+               "ORO_022", "ORO_043", "COR_003", "ART_011", "BLS_001", "BLS_002", "BRO_001"]
 }
     
 
