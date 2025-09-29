@@ -116,7 +116,7 @@ site_dict = {
     "Olives": olives,
     "Pistachios": pistachios,
     "Table Grapes": ["BRO_001"],
-    "Custom": ["OLA_001", "WWF_001", "VAC_001", "WES_001", "SLC_001", "FLT_001", "SLM_001", "VOK_001", "RIP_722", "RIP_760",
+    "Custom": ["OLA_001", "WWF_001", "VAC_001", "WES_002", "SLC_001", "FLT_001", "SLM_001", "VOK_001", "RIP_722", "RIP_760",
                "ORO_022", "ORO_043", "COR_003", "ART_011", "BLS_001", "BLS_002", "BRO_001"]
 }
     
