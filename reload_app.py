@@ -1,7 +1,11 @@
 import requests
+import json
 
-username = 'audreypet'
-token = '0540c9dd2b156af5308aec5ad02d3e97039f98b6'  # found in your PythonAnywhere account
+with open(f"C:/Users/cpetrosi/Documents/GitHub/crop-dashboard/hidden_file.json", 'r') as file:
+   user_info = json.load(file)
+
+username = user_info["username"]
+token = user_info["token"]  
 
 # domain = f"{username}.pythonanywhere.com"
 
